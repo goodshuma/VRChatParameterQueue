@@ -101,14 +101,8 @@ namespace dev.ReiraLab.Runtime
                 }
             }
 
-            var nextQueueStateMachine = layer.stateMachine.AddStateMachine("NextQueue_SM", new Vector3(550, 80, 0));
             {
-                var state = AddState(nextQueueStateMachine, "Entry", new Vector3(300, -80, 0));
-                var transition = TransitionInit(state.AddExitTransition());
-                transition.AddCondition(AnimatorConditionMode.IfNot, 0f, "false");
-            }
-            {
-                var nextState = AddState(nextQueueStateMachine, "ShiftQueue", new Vector3(300, 80, 0));
+                var nextState = AddState(layer.stateMachine, "ShiftQueue", new Vector3(550, 80, 0));
                 var driver = nextState.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
                 for (int i = 0; i < maxQueueSize - 1; i++)
                 {
@@ -139,7 +133,8 @@ namespace dev.ReiraLab.Runtime
                     driver.parameters.Add(parameter);
                 }
                 {
-                    var transition = nextQueueStateMachine.AddEntryTransition(nextState);
+                    var transition = TransitionInit(idleState.AddTransition(nextState));
+                    transition.AddCondition(AnimatorConditionMode.If, 0f, parameterName + "_Next");
                     transition.AddCondition(AnimatorConditionMode.Greater, -1f, parameterName + "_Count");
                 }
                 {
@@ -152,11 +147,6 @@ namespace dev.ReiraLab.Runtime
                 var transition = TransitionInit(idleState.AddTransition(addQueueStateMachine));
                 transition.AddCondition(AnimatorConditionMode.If, 0f, parameterName + "_Add");
                 transition.AddCondition(AnimatorConditionMode.Less, maxQueueSize, parameterName + "_Count");
-            }
-            {
-                var transition = TransitionInit(idleState.AddTransition(nextQueueStateMachine));
-                transition.AddCondition(AnimatorConditionMode.If, 0f, parameterName + "_Next");
-                transition.AddCondition(AnimatorConditionMode.Greater, -1f, parameterName + "_Count");
             }
 
             animatorController.AddLayer(layer);
