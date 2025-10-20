@@ -28,6 +28,29 @@ public class ParameterQueue : MonoBehaviour
         animatorController.AddParameter(parameterName + "_Next", AnimatorControllerParameterType.Bool);
         animatorController.AddParameter(parameterName + "_Count", AnimatorControllerParameterType.Int);
 
+        string layerName = "PQ_" + parameterName;
+        for (int i = 0; i < animatorController.layers.Length; i++)
+        {
+            if (animatorController.layers[i].name == layerName)
+            {
+                animatorController.RemoveLayer(i);
+                i--;
+            }
+        }
+        animatorController.AddLayer(layerName);
+        AnimatorControllerLayer layer = null;
+        for (int i = 0; i < animatorController.layers.Length; i++)
+        {
+            if (animatorController.layers[i].name == layerName)
+            {
+                layer = animatorController.layers[i];
+                break;
+            }
+        }
+
+        layer.stateMachine = new AnimatorStateMachine();
+        layer.stateMachine.name = layerName;
+        layer.stateMachine.AddState("Idle", new Vector3(300, 0, 0));
 
     }
 
