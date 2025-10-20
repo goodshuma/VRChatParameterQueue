@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ParameterQueue : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    int maxQueueSize = 10;
+    [SerializeField]
+    string parameterName = "Queue";
+    [SerializeField]
+    QueueType queueType = QueueType.Int;
 
-    // Update is called once per frame
-    void Update()
+
+    enum QueueType
     {
-        
+        Int,
+        Float
     }
 }
