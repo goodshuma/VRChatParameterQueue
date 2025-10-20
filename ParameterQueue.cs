@@ -14,15 +14,21 @@ public class ParameterQueue : MonoBehaviour
 
     public void GenerateParameterQueue()
     {
+        AnimatorControllerParameterType paramType =
+            queueType == QueueType.Int
+            ? AnimatorControllerParameterType.Int
+            : AnimatorControllerParameterType.Float;
         for (int i = 0; i < maxQueueSize; i++)
         {
             string paramName = parameterName + "_" + i.ToString("D3");
-            AnimatorControllerParameterType paramType =
-                queueType == QueueType.Int
-                ? AnimatorControllerParameterType.Int
-                : AnimatorControllerParameterType.Float;
             animatorController.AddParameter(paramName, paramType);
         }
+        animatorController.AddParameter(parameterName + "_AddValue", paramType);
+        animatorController.AddParameter(parameterName + "_Add", AnimatorControllerParameterType.Bool);
+        animatorController.AddParameter(parameterName + "_Next", AnimatorControllerParameterType.Bool);
+        animatorController.AddParameter(parameterName + "_Count", AnimatorControllerParameterType.Int);
+
+
     }
 
 
