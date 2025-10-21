@@ -54,7 +54,9 @@ namespace dev.ReiraLab.Runtime
             layer.name = layerName;
             layer.defaultWeight = 1f;
             layer.stateMachine = new AnimatorStateMachine();
+            AssetDatabase.AddObjectToAsset(layer.stateMachine, animatorController);
             layer.stateMachine.name = layerName;
+            layer.stateMachine.hideFlags = HideFlags.HideInHierarchy;
             var idleState = AddState(layer.stateMachine, "Idle", new Vector3(300, 0, 0));
             var addQueueStateMachine = layer.stateMachine.AddStateMachine("AddQueue_SM", new Vector3(300, 80, 0));
             {
@@ -150,6 +152,7 @@ namespace dev.ReiraLab.Runtime
             }
 
             animatorController.AddLayer(layer);
+            AssetDatabase.SaveAssets();
 
             AssetDatabase.StopAssetEditing();
         }
