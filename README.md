@@ -8,13 +8,16 @@ ParameterQueue は、VRChat Animator パラメーターを使用してキュー�
 
 ## 機能
 
-- キューの自動生成：指定したサイズのキューを AnimatorController パラメーターとして生成
-- Int/Float 両対応：キューの要素型を選択可能
-- Animator 統合：ステートマシンから直接キュー操作が可能
+- **キューの自動生成**：Inspector ボタンで VRChat Animator パラメーターと制御ロジックを自動生成
+- **Int/Float 両対応**：キューの要素型を選択可能
+- **自動パラメーター管理**：値の追加・削除が自動的に処理される
 
 ## 使用方法
 
-以下のパラメーターが自動生成されます（NDMF で将来的に自動化予定）：
+1. ParameterQueue コンポーネントを GameObject に追加
+2. AnimatorController を割り当て
+3. Inspector の「Generate Parameter Queue」ボタンをクリック
+4. 以下のパラメーターが自動生成されます
 
 ## パラメーター仕様
 
@@ -65,20 +68,22 @@ ParameterQueue は、VRChat Animator パラメーターを使用してキュー�
 - **役割**：キュー内の現在の要素数を表示
 - **用途**：キューが空か、満杯かの判定に使用
 
-## 使用例
+## Animator での操作
 
 ### キューに値を追加
 
-1. `{parameterName}_Add` が false の状態を確認
+1. `{parameterName}_Add` が false であることを確認（処理中でないか確認）
 2. `{parameterName}_AddValue` に追加したい値を設定
 3. `{parameterName}_Add` を true に変更
-4. 処理完了後、`{parameterName}_Add` が自動的に false に戻る
+4. 処理が自動的に実行され、値がキューに追加される
+5. `{parameterName}_Add` は自動的に false に戻る
 
 ### キューを進める
 
-1. `{parameterName}_Next` を true に変更
-2. 要素0が削除され、残りの要素が1段前にシフト
-3. 処理完了後、`{parameterName}_Next` が自動的に false に戻る
+1. `{parameterName}_Next` が false であることを確認（処理中でないか確認）
+2. `{parameterName}_Next` を true に設定
+3. キューがシフトされ、最初の要素が削除される
+4. `{parameterName}_Next` は自動的に false に戻る
 
 ### キューの状態確認
 
