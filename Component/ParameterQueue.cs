@@ -69,28 +69,36 @@ namespace dev.ReiraLab.Runtime
             List<AnimatorStateMachine> addedStateMachines = new List<AnimatorStateMachine>();
             AnimatorStateMachine remStateMachine = null;
             int len = maxQueueSize.ToString().Length;
+
             {
                 int power = (int)Mathf.Pow(10, len - 1);
                 int div = maxQueueSize / power;
                 int rem = maxQueueSize % power;
-                for (int i = 0; i < div; i++)
+                if (len <= 1 || div == 1 && rem == 0)
                 {
-                    addedStateMachines.Add(
-                        addQueueStateMachine.AddStateMachine(
-                            (i * power).ToString() + "~" + ((i + 1) * power - 1).ToString()
-                            , new Vector3(300, i * 80, 0)));
-                    var transition = addQueueStateMachine.AddEntryTransition(addedStateMachines[i]);
-                    transition.AddCondition(AnimatorConditionMode.Greater, i * power - 1, parameterName + "_Count");
-                    transition.AddCondition(AnimatorConditionMode.Less, (i + 1) * power, parameterName + "_Count");
+                    addedStateMachines.Add(addQueueStateMachine);
                 }
-                if (rem != 0)
+                else
                 {
-                    remStateMachine = addQueueStateMachine.AddStateMachine(
-                        (div * power).ToString() + "~" + (maxQueueSize - 1).ToString()
-                        , new Vector3(300, div * 80, 0));
-                    var transition = addQueueStateMachine.AddEntryTransition(remStateMachine);
-                    transition.AddCondition(AnimatorConditionMode.Greater, div * power - 1, parameterName + "_Count");
-                    transition.AddCondition(AnimatorConditionMode.Less, maxQueueSize, parameterName + "_Count");
+                    for (int i = 0; i < div; i++)
+                    {
+                        addedStateMachines.Add(
+                            addQueueStateMachine.AddStateMachine(
+                                (i * power).ToString() + "~" + ((i + 1) * power - 1).ToString()
+                                , new Vector3(300, i * 80, 0)));
+                        var transition = addQueueStateMachine.AddEntryTransition(addedStateMachines[i]);
+                        transition.AddCondition(AnimatorConditionMode.Greater, i * power - 1, parameterName + "_Count");
+                        transition.AddCondition(AnimatorConditionMode.Less, (i + 1) * power, parameterName + "_Count");
+                    }
+                    if (rem != 0)
+                    {
+                        remStateMachine = addQueueStateMachine.AddStateMachine(
+                            (div * power).ToString() + "~" + (maxQueueSize - 1).ToString()
+                            , new Vector3(300, div * 80, 0));
+                        var transition = addQueueStateMachine.AddEntryTransition(remStateMachine);
+                        transition.AddCondition(AnimatorConditionMode.Greater, div * power - 1, parameterName + "_Count");
+                        transition.AddCondition(AnimatorConditionMode.Less, maxQueueSize, parameterName + "_Count");
+                    }
                 }
             }
             for (int i = len; i > 2; i--)
@@ -148,7 +156,10 @@ namespace dev.ReiraLab.Runtime
                     }
                 }
             }
-            addedStateMachines.Add(remStateMachine);
+            if (remStateMachine != null)
+            {
+                addedStateMachines.Add(remStateMachine);
+            }
             foreach (var addedStateMachine in addedStateMachines)
             {
                 var state = AddState(addedStateMachine, "Entry", new Vector3(300, -80, 0));
