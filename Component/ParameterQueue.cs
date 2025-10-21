@@ -1,11 +1,12 @@
 using UnityEditor.Animations;
 using UnityEngine;
+using VRC.SDKBase;
 
 namespace dev.ReiraLab.Runtime
 {
     [DisallowMultipleComponent]
     [AddComponentMenu("ReiraLab/Parameter Queue")]
-    public class ParameterQueue : MonoBehaviour
+    public class ParameterQueue : MonoBehaviour, IEditorOnly
     {
         public int maxQueueSize = 10;
         public string parameterName = "Queue";
