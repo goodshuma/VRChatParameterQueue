@@ -136,13 +136,16 @@ namespace dev.ReiraLab.Runtime
                         transition.AddCondition(AnimatorConditionMode.Greater, div * power + e * power / 10 - 1, parameterName + "_Count");
                         transition.AddCondition(AnimatorConditionMode.Less, div * power + (e + 1) * power / 10, parameterName + "_Count");
                     }
-                    var tempRemStateMachine = remStateMachine.AddStateMachine(
+                    if (rem != 0)
+                    {
+                        var tempRemStateMachine = remStateMachine.AddStateMachine(
                          (div * power + div2 * power / 10).ToString() + "~" + (maxQueueSize - 1).ToString()
                          , new Vector3(300, div2 * 80, 0));
-                    var transition2 = remStateMachine.AddEntryTransition(tempRemStateMachine);
-                    remStateMachine = tempRemStateMachine;
-                    transition2.AddCondition(AnimatorConditionMode.Greater, div * power + div2 * power / 10 - 1, parameterName + "_Count");
-                    transition2.AddCondition(AnimatorConditionMode.Less, maxQueueSize, parameterName + "_Count");
+                        var transition2 = remStateMachine.AddEntryTransition(tempRemStateMachine);
+                        remStateMachine = tempRemStateMachine;
+                        transition2.AddCondition(AnimatorConditionMode.Greater, div * power + div2 * power / 10 - 1, parameterName + "_Count");
+                        transition2.AddCondition(AnimatorConditionMode.Less, maxQueueSize, parameterName + "_Count");
+                    }
                 }
             }
             addedStateMachines.Add(remStateMachine);
