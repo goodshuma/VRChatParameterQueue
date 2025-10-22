@@ -4,7 +4,6 @@ using VRC.SDKBase;
 
 namespace dev.ReiraLab.Runtime
 {
-    [DisallowMultipleComponent]
     [AddComponentMenu("ReiraLab/Parameter Queue")]
     public class ParameterQueue : MonoBehaviour, IEditorOnly
     {
