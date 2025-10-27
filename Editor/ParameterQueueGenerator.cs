@@ -13,6 +13,13 @@ namespace dev.ReiraLab.Editor
 
         public static void Generate(ParameterQueue queue)
         {
+            AnimatorController animatorController = queue.animatorController as AnimatorController;
+            if (animatorController == null)
+            {
+                Debug.LogError("AnimatorController is not assigned or is not an AnimatorController.");
+                return;
+            }
+
             emptyClip = AssetDatabase.LoadAssetAtPath<AnimationClip>("Packages/com.vrchat.avatars/Samples/AV3 Demo Assets/Animation/ProxyAnim/proxy_empty.anim");
 
             AssetDatabase.StartAssetEditing();
@@ -25,21 +32,21 @@ namespace dev.ReiraLab.Editor
             for (int i = 0; i < queue.maxQueueSize; i++)
             {
                 string paramName = queue.parameterName + "_" + i.ToString("D3");
-                AddParameter(queue.animatorController, paramName, paramType);
+                AddParameter(animatorController, paramName, paramType);
             }
-            AddParameter(queue.animatorController, queue.parameterName + "_AddValue", paramType);
-            AddParameter(queue.animatorController, queue.parameterName + "_Add", AnimatorControllerParameterType.Bool);
-            AddParameter(queue.animatorController, queue.parameterName + "_Next", AnimatorControllerParameterType.Bool);
-            AddParameter(queue.animatorController, queue.parameterName + "_Count", AnimatorControllerParameterType.Int);
-            AddParameter(queue.animatorController, "false", AnimatorControllerParameterType.Bool);
+            AddParameter(animatorController, queue.parameterName + "_AddValue", paramType);
+            AddParameter(animatorController, queue.parameterName + "_Add", AnimatorControllerParameterType.Bool);
+            AddParameter(animatorController, queue.parameterName + "_Next", AnimatorControllerParameterType.Bool);
+            AddParameter(animatorController, queue.parameterName + "_Count", AnimatorControllerParameterType.Int);
+            AddParameter(animatorController, "false", AnimatorControllerParameterType.Bool);
 
             // 既存レイヤー削除
             string layerName = "PQ_" + queue.parameterName;
-            for (int i = 0; i < queue.animatorController.layers.Length; i++)
+            for (int i = 0; i < animatorController.layers.Length; i++)
             {
-                if (queue.animatorController.layers[i].name == layerName)
+                if (animatorController.layers[i].name == layerName)
                 {
-                    queue.animatorController.RemoveLayer(i);
+                    animatorController.RemoveLayer(i);
                     i--;
                 }
             }
@@ -49,10 +56,10 @@ namespace dev.ReiraLab.Editor
             layer.name = layerName;
             layer.defaultWeight = 1f;
             layer.stateMachine = new AnimatorStateMachine();
-            AssetDatabase.AddObjectToAsset(layer.stateMachine, queue.animatorController);
+            AssetDatabase.AddObjectToAsset(layer.stateMachine, animatorController);
             layer.stateMachine.name = layerName;
             layer.stateMachine.hideFlags = HideFlags.HideInHierarchy;
-            queue.animatorController.AddLayer(layer);
+            animatorController.AddLayer(layer);
 
             var idleState = AddState(layer.stateMachine, "Idle", new Vector3(300, 0, 0));
             var addQueueStateMachine = layer.stateMachine.AddStateMachine("AddQueue_SM", new Vector3(300, 80, 0));

@@ -1,4 +1,3 @@
-using UnityEditor.Animations;
 using UnityEngine;
 using VRC.SDKBase;
 
@@ -10,7 +9,7 @@ namespace dev.ReiraLab.Runtime
         public int maxQueueSize = 10;
         public string parameterName = "Queue";
         public QueueType queueType = QueueType.Int;
-        public AnimatorController animatorController;
+        public RuntimeAnimatorController animatorController;
 
         public enum QueueType
         {
